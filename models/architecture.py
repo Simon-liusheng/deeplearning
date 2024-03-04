@@ -1,7 +1,5 @@
-import torchinfo
-
 from backbone import CspDarknet
-from neck import PAN
+from neck import YoloNeck
 from head import YoloHead
 import torch.nn as nn
 
@@ -16,7 +14,7 @@ class YoloV5(nn.Module):
         bc = int(wid_mul * 64)  # 64
         bd = max(round(dep_mul * 3), 1)  # 3
         self.backbone = CspDarknet(bc, bd)
-        self.neck = PAN(bc, bd)
+        self.neck = YoloNeck(bc, bd)
         self.head = YoloHead(bc, anchors, nc)
 
     def forward(self, x):
@@ -25,6 +23,7 @@ class YoloV5(nn.Module):
 
 if __name__ == '__main__':
     import torch
+    import torchinfo
     from torchsummary import summary
 
     anchors = [[10, 13, 16, 30, 33, 23],
@@ -33,10 +32,10 @@ if __name__ == '__main__':
     nc = 1
     model_type = "s"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    inputs = torch.rand(1, 3, 640, 640).to(device)
     model = YoloV5(anchors, nc, model_type).to(device)
-    summary(model, input_size=(3, 640, 640))
+    # summary(model, input_size=(3, 640, 640))
     torchinfo.summary(model, input_size=(3, 640, 640), batch_dim=0)
+    inputs = torch.rand(1, 3, 640, 640).to(device)
     output = model(inputs)
     for o in output:
         print(o.shape)

@@ -3,7 +3,7 @@ import torch.nn as nn
 from common import Conv, C3
 
 
-class PAN(nn.Module):
+class YoloNeck(nn.Module):
     def __init__(self, bc, bd):
         super().__init__()
         self.upsample = nn.Upsample(scale_factor=2, mode="nearest")

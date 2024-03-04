@@ -4,7 +4,6 @@ import torch.nn as nn
 
 
 def autopad(k, p=None, d=1):
-    # //如果是空洞卷积
     if d > 1:
         k = d * (k - 1) + 1 if isinstance(k, int) else [d * (x - 1) + 1 for x in k]
     if p is None:
@@ -13,7 +12,6 @@ def autopad(k, p=None, d=1):
 
 
 class Conv(nn.Module):
-    default_act = nn.SiLU()
 
     def __init__(self, c1, c2, kernel_size=1, stride=1, padding=None, groups=1, dilation=1, act=True):
         '''
@@ -35,7 +33,7 @@ class Conv(nn.Module):
         self.conv = nn.Conv2d(c1, c2, kernel_size, stride, autopad(kernel_size, padding, dilation), groups=groups,
                               dilation=dilation, bias=False)
         self.bn = nn.BatchNorm2d(c2)
-        self.act = self.default_act if act else act if isinstance(act, nn.Module) else nn.Identity()
+        self.act = nn.SiLU() if act else act if isinstance(act, nn.Module) else nn.Identity()
 
     # 前向计算,cba
     def forward(self, x):
