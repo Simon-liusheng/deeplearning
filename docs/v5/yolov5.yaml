@@ -2,6 +2,7 @@
 nc: 1
 train: D:\dataset\meter\train.txt
 val: D:\dataset\meter\val.txt
+size: 640
 names: [ 'meter' ]
 model_type: s
 anchors:
